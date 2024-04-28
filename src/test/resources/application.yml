@@ -4,6 +4,11 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+#  datasource:
+#    url: jdbc:mysql:tcp://localhost/~/commerce2
+#    username: sa
+#    password: 1234
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
