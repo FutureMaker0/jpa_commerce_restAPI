@@ -18,3 +18,4 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
      
 ## API 어노테이션
   - @RestController: @Controller + @ResponseBody
+  - @RequestBody: json으로 넘어온 body를 객체로 바로 매핑해서 값을 넣어준다. (json data -> Entity 객체)
