@@ -16,5 +16,5 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     - api
       - MemberApiController
      
-## API 어노테치션
+## API 어노테이션
   - @RestController: @Controller + @ResponseBody
