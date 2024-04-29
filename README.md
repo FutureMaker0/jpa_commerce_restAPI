@@ -42,7 +42,9 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   - 기존에 만들어놓은 updateMember() 함수가 주소값까지 모두 파라미터로 받게 되어 있다. (id, name, country, city, zipcode)
     - 이에 요청 DTO(updateMemberRequest에는 모든 값을 저장하도록 하지만 별도의 @NotEmpty 어노테이션이 없으므로 변경을 원치 않는 값은 공백으로 전송이 가능하며, 받은 요청 데이터만 수정하여 응답은 id, name만을 내보내도록 설계하였다.
 
-
+## 회원조회 API(전체 List 조회)
+  - application.yml jpa.hibernate.ddl-auto: none 으로 setting
+  - GET 요청을 보냈을 때, aborted error가 발생하였다.
 
 
 
