@@ -110,8 +110,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       // mainApplication
       @Bean
       Hibernate5JakartaModule hibernate5JakartaModule() {
-		    return new Hibernate5JakartaModule();
-	    }
+      	return new Hibernate5JakartaModule();
+      }
       ```
       이 형태로 모듈을 활용해주면 프록시 객체에서의 지연 로딩으로 발생하는 문제를 해결할 수 있다.
 
