@@ -97,12 +97,23 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   - 그런데 일대다 조인이 되면 1개 당 N개 데이터가 붙어서 데이터가 방대해져버리므로 이러한 상황에서 성능 최적화하는 것이 쉽지 않다.
 
 ## 회원 + 주문 + 배송정보 를 조회하는 API 개발
-> 본 API 개발을 통해, 지연 로딩으로 인해 발생하는 성능 문제를 잡아나갈 수 있는 방식을 설명한다.
+> 본 API 개발을 통해, 지연 로딩으로 인해 발생할 수 있는 문제를 확인하고, 성능을 잡아나갈 수 있는 방식을 설명한다.
 > 일대일 또는 다대일 연관관계를 갖는 형태로 join으로 인한 성능 저하가 비교적 덜 발생하는 저난이도의 API에서의 성능 최적화를 어떻게 할 수 있을 것인가.
   - 일단 json 순환 참조를 막기 위해 양방향이 걸리는 데는 모두 다 한 쪽에 가서 @JsonIgnore를 걸어주어 한 쪽을 끊어줘야 한다. ex) Member에 있는 order, OrderProducts에 있는 order, Delivery에 있는 order
   - 무한 참조를 해결했더니 또 다른 에러가 발생했다. (Type definition error: [simple type, class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor]) 이하생략
     - 지연 로딩(FetchType.LAZY)로 설정하면서 발생하는 오류로, 지연 로딩을 하면서 연관관계에 있는 엔티티들은 실제 엔티티 객체가 아닌 프록시 객체로 가지고 있는데, 그 상태에서 데이터를 엮어서(serialize) 가져올 수 없어서 발생한다.
+    - 프록시 객체에서 데이터를 갖고 오려하는, 지연로딩이 걸려있는 연관관계 필드들을 일단 null로 값을 가져오는 형태로 일단 해결할 수 있는 방법으로 해결이 가능하다.(Hibernate5JakartaModule 설치 및 Spring Bean으로 등록하는 방법)
+      ```java
+      // build.gradle
+      implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 
+      // mainApplication
+      @Bean
+      Hibernate5JakartaModule hibernate5JakartaModule() {
+		    return new Hibernate5JakartaModule();
+	    }
+      ```
+      이 형태로 모듈을 활용해주면 프록시 객체에서의 지연 로딩으로 발생하는 문제를 해결할 수 있다.
 
 
 
