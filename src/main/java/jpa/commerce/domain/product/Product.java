@@ -29,12 +29,16 @@ public abstract class Product {
     private List<Category> categories = new ArrayList<Category>();
 
     //@JoinColumn(name = "uploadFile_id") // UploadFile 테이블에 외래키로 매핑될 컬럼 이름
+    //@JoinColumn(name = "uploadFileName")
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "uploadFileName")
     private UploadFile uploadFile;
 
+    //@JoinColumn(name = "imageFile_id")
+//    @JoinTable(name = "product_imageFiles",
+//            joinColumns = @JoinColumn(name = "imageFile_id"),
+//            inverseJoinColumns = @JoinColumn(name = "product_id"))
     @OneToMany(cascade = CascadeType.ALL)
-    private List<UploadFile> imageFileList;
+    private List<UploadFile> imageFileList = new ArrayList<>();
 
 
 

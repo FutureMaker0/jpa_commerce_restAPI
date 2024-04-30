@@ -1,5 +1,6 @@
 package jpa.commerce.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jpa.commerce.domain.product.Product;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class OrderProduct {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
