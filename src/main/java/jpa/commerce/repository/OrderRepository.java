@@ -54,4 +54,13 @@ public class OrderRepository {
         return QOrder.order.orderStatus.eq(orderStatus);
     }
 
+    public List<Order> findAllUsingMemberDelivery() {
+        List<Order> resultOrders = em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).getResultList();
+        return resultOrders;
+    }
+
 }
