@@ -270,6 +270,11 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         join member m1_0 on m1_0.member_id=o1_0.member_id
         join delivery d1_0 on d1_0.delivery_id=o1_0.delivery_id;
       ```
+      - V3 fetch join 대비 원하는 데이터들만 간략하게 가져오는 것을 확인할 수 있다. 직접 쿼리를 짰기 때문에 당연한 것이다.
+      - fetch join은 이렇게 select 절에서 데이터를 퍼올리는 과정에서 데이터를 불필요한 것까지 많이 가지고 온다.
+--> V3, V4 간에는 trade-off가 존재하기 때문에 무엇이 맞다고 이야기하기 어렵다.
+  - V3의 경우, 많은 API에서 활용 가능성이 열려 있다. fetch join 된 테이블에서 원본 주문 리스트를 얻고 여러 DTO를 적용하여 추가 가공이 가능하도록 열려 있는 것이다.
+  - v4의 경우, 애초에 가질 값을 위해 쿼리를 fit하게 작성해버렸기 때문에 추가 가공이 어려워 다른 API에서의 활용 가능성이 없는 것이다. 물론 쿼리의 수가 적기 때문에 성능 측면에서는 V3보다 우수하다.
 
 
 
