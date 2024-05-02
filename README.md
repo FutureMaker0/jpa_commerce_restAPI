@@ -227,9 +227,49 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       join member m1_0 on m1_0.member_id=o1_0.member_id
       join delivery d1_0 on d1_0.delivery_id=o1_0.delivery_id;
     ```
+- OrderApiController V4: JPA에서 DTO로 바로 조회, 좀 더 높은 수준의 성능 최적화가 가능하다.
+  > DTO는 Entity를 참조해도 괜찮다. 그러나 반대로 Entity가 DTO를 참조해선 안된다.
+  - JPA는 엔티티 또는 value object만 반환이 가능하다. DTO를 반환 형식으로 사용할 수는 없기에 조작을 좀 해줘야 한다.
+    ```java
+    // AS-IS
+    public List<OrderJpaDirectDto> findOrderDtoList() {
+        List<OrderJpaDirectDto> resultDtoList = em.createQuery(
+                "select o from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d", OrderJpaDirectDto.class
+        ).getResultList();
 
+        return resultDtoList;
+    }
 
+    // orderRepository.findOrderDtos()
+    // TO-BE
+    public List<OrderJpaDirectDto> findOrderDtoList() {
+        List<OrderJpaDirectDto> resultDtoList = em.createQuery(
+                "select new jpa.commerce.api.order.dto.OrderJpaDirectDto(o.id, m.name, o.orderDate, o.orderStatus, d.address)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d", OrderJpaDirectDto.class
+        ).getResultList();
 
+        return resultDtoList;
+    }
+    ```
+    - select o -> select new jpa.commerce.api.order.dto.OrderJpaDirectDto(o.id, m.name, o.orderDate, o.orderStatus, d.address)로 변경하여 DTO를 바로 가지고 오도록 변경하였다.
+      ```sql
+      # sql query 결과 로그
+      select
+        o1_0.order_id,
+        m1_0.name,
+        o1_0.order_date,
+        o1_0.order_status,
+        d1_0.city,
+        d1_0.country,
+        d1_0.zipcode
+      from orders o1_0
+        join member m1_0 on m1_0.member_id=o1_0.member_id
+        join delivery d1_0 on d1_0.delivery_id=o1_0.delivery_id;
+      ```
 
 
 
