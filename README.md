@@ -292,7 +292,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
 #### 문제점에 대한 해결책
   > Entity로 조회한 뒤 DTO를 통해 가공하면 리포지토리의 재사용성이 좋고, 개발도 한결 간편해진다는 것을 기억한다.
   - 조회 성능 향상을 위해 특정 API 용으로 fit하게 설계한 repository 내 메서드를 별도 패키징하여, 리포지토리는 본질적 목적을 준수하도록 한다.
-  - // Order API file tree
+  ```java
   - jpa
     - commerce
       - api
@@ -306,6 +306,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
             - ObjectFormat
             - OrderDtoL1
             - OrderJpaDirectDto
+  ```
 
 #### query 방식으로 조회 시 권장하는 개발 방법론 순서
   1. Entity를 직접 조회한 후 DTO로 변환하여 사용 - ordersV2()
