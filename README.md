@@ -182,7 +182,59 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         private T data;
     }
     ```
-- OrderApiController V3: 엔티티 > DTO 변환
+- OrderApiController V3: 엔티티 > DTO 변환, fetch join 통한 쿼리 최적화 및 성능 향상
+  ```java
+  @GetMapping("api/v3-object/orders")
+  public ObjectFormat objectOrdersV3() {
+      List<Order> allOrders = orderRepository.findAllUsingMemberDelivery();
+      List<OrderDtoL1> resultDto = allOrders.stream()
+              .map(order -> new OrderDtoL1(order))
+              .collect(Collectors.toList());
+
+      return new ObjectFormat(resultDto);
+  }
+
+  // orderRepository.findAllUsingMemberDeliversy()
+  public List<Order> findAllUsingMemberDelivery() {
+      List<Order> resultOrders = em.createQuery(
+              "select o from Order o" +
+                      " join fetch o.member m" +
+                      " join fetch o.delivery d", Order.class
+      ).getResultList();
+      return resultOrders;
+  }
+  ```
+  - Mapper 통한 과정을 이전과 동일하다.
+  - V2까지는, LAZY loading으로 인해 N+1 문제가 발생하여 쿼리가 비효율적으로 많이 나가 데이터 조회 성능이 좋지 못했다.
+  - V3에서는, 주문 리포지토리에 findAllUsingMemberDelivery() 라는 메서드를 새로이 정의하였고, 쿼리에서 fetch join을 사용하여 주문, 회원, 배송 정보를 한 번에 조회하여 성능을 향상시키고자 하였다.
+    ```sql
+    // sql query 결과 로그
+    select
+      o1_0.order_id,
+      d1_0.delivery_id,
+      d1_0.city,
+      d1_0.country,
+      d1_0.zipcode,
+      d1_0.delivery_status,
+      m1_0.member_id,
+      m1_0.city,
+      m1_0.country,
+      m1_0.zipcode,
+      m1_0.name,
+      o1_0.order_date,
+      o1_0.order_status
+    from orders o1_0
+      join member m1_0 on m1_0.member_id=o1_0.member_id
+      join delivery d1_0 on d1_0.delivery_id=o1_0.delivery_id;
+    ```
+
+
+
+
+
+
+
+
 
 
 
