@@ -21,14 +21,14 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           - UpdateMemberRequest
           - UpdateMemberResponse
       - order
-            - repository
-              - queryRepository
-            - controller
-              - OrderApiControllerL1
-            - dto
-              - ObjectFormat
-              - OrderDtoL1
-              - OrderJpaDirectDto
+        - repository
+          - queryRepository
+        - controller
+          - OrderApiControllerL1
+        - dto
+          - ObjectFormat
+          - OrderDtoL1
+          - OrderJpaDirectDto
      
 ## API 어노테이션
   - @RestController: @Controller + @ResponseBody
