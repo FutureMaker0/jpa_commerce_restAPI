@@ -21,11 +21,14 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           - UpdateMemberRequest
           - UpdateMemberResponse
       - order
-        - controller
-          - OrderApiControllerL1
-        - dto
-          - ObjectFormat
-          - OrderDtoL1
+            - repository
+              - queryRepository
+            - controller
+              - OrderApiControllerL1
+            - dto
+              - ObjectFormat
+              - OrderDtoL1
+              - OrderJpaDirectDto
      
 ## API 어노테이션
   - @RestController: @Controller + @ResponseBody
@@ -279,7 +282,32 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     > Repository는 엔티티에 대한 객체 그래프를 조회하는 용도에 핵심적으로 사용되어야 하는데, V4의 경우 API 스펙에 맞춰서 쿼리가 핏하게 짜져있어 용도에 벗어났다고 볼 수 있다. Repository가 화면에 의존하며 API 스펙이 바뀐 상황에서
       계속 활용하고자 할 경우 다시 뜯어고쳐야 한다.
 
+### V4 및 전체 정리
+  - V4:
+    1. 일반적인 SQL을 사용할 때 처럼, 원하는 값만 반환하기 위한 JPQL 작성
+    2. em.createQuery의 select 에서 new 명령어를 사용하여 JPQL의 결과를 DTO로 변환
+    3. select 절에서 원하는 데이터를 지정하는 방식이므로 DB -> 애플리케이션 서비스 간 네트워크 용량 최적화
+    -> 직접 원하는 값을 지정하므로 속도(성능)의 향상을 기대할 수 있지만, repository 재사용성이 떨어지고 특정 API 스펙에 맞춘 메서드가 repository 내 위치함으로써 리포지토리의 본질적 목적에서 벗어나게 함.
 
+#### 문제점에 대한 해결책
+  > Entity로 조회한 뒤 DTO를 통해 가공하면 리포지토리의 재사용성이 좋고, 개발도 한결 간편해진다는 것을 기억한다.
+  - 조회 성능 향상을 위해 특정 API 용으로 fit하게 설계한 repository 내 메서드를 별도 패키징하여, 리포지토리는 본질적 목적을 준수하도록 한다.
+    - jpa
+      - commerce
+        - api
+          - ...
+          - order
+            - repository
+              - queryRepository
+            - controller
+              - OrderApiControllerL1
+            - dto
+              - ObjectFormat
+              - OrderDtoL1
+              - OrderJpaDirectDto
+
+#### query 방식으로 조회 시 권장하는 개발 방법론 순서
+  1. 
 
 
 
