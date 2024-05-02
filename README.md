@@ -312,7 +312,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   1. Entity를 직접 조회한 후 DTO로 변환하여 사용 - ordersV2()
   2. fetch join 하여 성능 최적화 - ordersV3() (왠만하면 이 단계에서 성능 이슈는 잡힌다.)
   3. 특정 API용 조회 query를 통해 DTO 직접 조회 - ordersV4()
-  4. 3단계 까지의 과정으로 최적화가 안된다면, native SQL 이나 JDBC template을 사용하여 SQL을 직접 다루어 조회한다.
+  4. 3단계 까지의 과정으로 최적화가 안된다면, native SQL 이나 JDBC template을 사용하여(EntityManager를 사용하는 것이 아닌) SQL을 직접 다루어 조회한다.
 
 
 
