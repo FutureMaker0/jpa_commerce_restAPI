@@ -1,12 +1,12 @@
 package jpa.commerce.api.order.controller;
 
 import jpa.commerce.api.order.dto.ObjectFormat;
-import jpa.commerce.api.order.dto.OrderDto1;
+import jpa.commerce.api.order.dto.OrderDtoL1;
+import jpa.commerce.api.order.dto.OrderJpaDirectDto;
+import jpa.commerce.api.order.repository.QueryRepository;
 import jpa.commerce.domain.Order;
 import jpa.commerce.domain.SearchOption;
 import jpa.commerce.repository.OrderRepository;
-import jpa.commerce.service.OrderService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
-public class OrderApiControllerV1 {
+public class OrderApiControllerL1 {
 
     private final OrderRepository orderRepository;
-    //private final OrderService orderService;
+    private final QueryRepository queryRepository;
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1() {
@@ -36,43 +36,54 @@ public class OrderApiControllerV1 {
     }
 
     @GetMapping("/api/v2/orders")
-    public List<OrderDto1> ordersV2() { // 실무에서는 List 반환은 안된다. Result로 감싸서 {} 객체 형태로 반환해야 한다.
+    public List<OrderDtoL1> ordersV2() { // 실무에서는 List 반환은 안된다. Result로 감싸서 {} 객체 형태로 반환해야 한다.
         List<Order> allOrders = orderRepository.findAllOrders(new SearchOption());
-        List<OrderDto1> resultDto = allOrders.stream()
-                .map(o -> new OrderDto1(o))
+        List<OrderDtoL1> resultDtoList = allOrders.stream()
+                .map(o -> new OrderDtoL1(o))
                 .collect(Collectors.toList());
 
-        return resultDto;
+        return resultDtoList;
     }
 
     @GetMapping("/api/v2-object/orders")
     public ObjectFormat objectOrdersV2() {
         List<Order> allOrders = orderRepository.findAllOrders(new SearchOption());
-        List<OrderDto1> resultDto = allOrders.stream()
-                .map(o -> new OrderDto1(o))
+        List<OrderDtoL1> resultDtoList = allOrders.stream()
+                .map(o -> new OrderDtoL1(o))
                 .collect(Collectors.toList());
 
-        return new ObjectFormat(resultDto);
+        return new ObjectFormat(resultDtoList);
     }
 
-    @GetMapping("api/v3/orders")
-    public List<OrderDto1> ordersV3() {
+    @GetMapping("/api/v3/orders")
+    public List<OrderDtoL1> ordersV3() {
         List<Order> allOrders = orderRepository.findAllUsingMemberDelivery();
-        List<OrderDto1> resultDto = allOrders.stream()
-                .map(order -> new OrderDto1(order))
+        List<OrderDtoL1> resultDtoList = allOrders.stream()
+                .map(order -> new OrderDtoL1(order))
                 .collect(Collectors.toList());
 
-        return resultDto;
+        return resultDtoList;
     }
 
-    @GetMapping("api/v3-object/orders")
+    @GetMapping("/api/v3-object/orders")
     public ObjectFormat objectOrdersV3() {
         List<Order> allOrders = orderRepository.findAllUsingMemberDelivery();
-        List<OrderDto1> resultDto = allOrders.stream()
-                .map(order -> new OrderDto1(order))
+        List<OrderDtoL1> resultDtoList = allOrders.stream()
+                .map(order -> new OrderDtoL1(order))
                 .collect(Collectors.toList());
 
-        return new ObjectFormat(resultDto);
+        return new ObjectFormat(resultDtoList);
+    }
+
+    @GetMapping("/api/v4/orders")
+    public List<OrderJpaDirectDto> ordersV4() {
+        return queryRepository.findOrderDtoList();
+    }
+
+    @GetMapping("/api/v4-object/orders")
+    public ObjectFormat objectOrdersV4() {
+        List<OrderJpaDirectDto> resultDtoList = queryRepository.findOrderDtoList();
+        return new ObjectFormat(resultDtoList);
     }
 
 }

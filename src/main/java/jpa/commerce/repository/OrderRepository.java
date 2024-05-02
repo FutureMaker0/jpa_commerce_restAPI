@@ -3,6 +3,7 @@ package jpa.commerce.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jpa.commerce.api.order.dto.OrderJpaDirectDto;
 import jpa.commerce.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -62,5 +63,16 @@ public class OrderRepository {
         ).getResultList();
         return resultOrders;
     }
+
+//    public List<OrderJpaDirectDto> findOrderDtoList() {
+//        List<OrderJpaDirectDto> resultDtoList = em.createQuery(
+//                "select new jpa.commerce.api.order.dto.OrderJpaDirectDto(o.id, m.name, o.orderDate, o.orderStatus, d.address)" +
+//                        " from Order o" +
+//                        " join o.member m" +
+//                        " join o.delivery d", OrderJpaDirectDto.class
+//        ).getResultList();
+//
+//        return resultDtoList;
+//    }
 
 }

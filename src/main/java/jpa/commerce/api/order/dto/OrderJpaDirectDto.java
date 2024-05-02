@@ -8,19 +8,20 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class OrderDto1 {
+public class OrderJpaDirectDto {
+
     private Long orderId;
     private String name;
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
     private Address address;
 
-    public OrderDto1(Order order) {
-        orderId = order.getId();
-        name = order.getMember().getName();
-        orderDate = order.getOrderDate();
-        orderStatus = order.getOrderStatus();
-        address = order.getDelivery().getAddress();
+    public OrderJpaDirectDto(Long orderId, String name, LocalDateTime orderDate, OrderStatus orderStatus, Address address) {
+        this.orderId = orderId;
+        this.name = name;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.address = address;
     }
 
 }
