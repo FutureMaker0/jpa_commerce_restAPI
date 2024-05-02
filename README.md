@@ -17,7 +17,22 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     - exception
     - file
     - api
-      - MemberApiController
+      - member
+        - controller
+          - MemberApiController
+        - dto
+          - CustomFormat
+          - MemberDto
+          - RegistMemberRequest
+          - RegistMemberResponse
+          - UpdateMemberRequest
+          - UpdateMemberResponse
+      - order
+        - controller
+          - OrderApiControllerL1
+        - dto
+          - ObjectFormat
+          - OrderDtoL1
      
 ## API 어노테이션
   - @RestController: @Controller + @ResponseBody
