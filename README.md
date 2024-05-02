@@ -123,15 +123,65 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       }
       ```
       이 형태로 모듈을 활용해주면 프록시 객체에서의 지연 로딩으로 발생하는 문제를 해결할 수 있다.
-  - Hibernate5JakartaModule 활용으로 인해 특정 필드 값이 null로 반환되는데, LAZY LOADING 초기화를 통해 원하는 값을 밀어넣는 방법
+    - Hibernate5JakartaModule 활용으로 인해 특정 필드 값이 null로 반환되는데, LAZY LOADING 초기화를 통해 원하는 값을 밀어넣는 방법
+      ```java
+      for (Order order : allOrders) {
+        order.getMember().getName(); // LAZY loading 강제 초기화
+        order.getDelivery().getAddress(); // LAZY loading 강제 초기화
+      }
+      ```
+- OrderApiController V2: 엔티티 > DTO 변환
+  > 엔티티를 가져오되, 중간 DTO를 거쳐 데이터를 한 차례 가공하여 엔티티를 직접 노출하지 않고 DTO를 최종 리턴 값으로 반환하는 형태.
+  - 반환 형태가 Dto를 거친 리스트 형태로 반환.
     ```java
-    for (Order order : allOrders) {
-      order.getMember().getName(); // LAZY loading 강제 초기화
-      order.getDelivery().getAddress(); // LAZY loading 강제 초기화
+    @GetMapping("/api/v2/orders")
+    public List<OrderDtoL1> ordersV2() { // 실무에서는 List 반환은 안된다. Result로 감싸서 {} 객체 형태로 반환해야 한다.
+        List<Order> allOrders = orderRepository.findAllOrders(new SearchOption());
+        List<OrderDtoL1> resultDto = allOrders.stream()
+                .map(o -> new OrderDtoL1(o))
+                .collect(Collectors.toList());
+  
+        return resultDto;
+    }
+  
+    // DTO - Dto 패키지에 별도 정의
+    @Data
+    public class OrderDtoL1 {
+        private Long orderId;
+        private String name;
+        private LocalDateTime orderDate;
+        private OrderStatus orderStatus;
+        private Address address;
+    
+        public OrderDtoL1(Order order) {
+            orderId = order.getId();
+            name = order.getMember().getName();
+            orderDate = order.getOrderDate();
+            orderStatus = order.getOrderStatus();
+            address = order.getDelivery().getAddress();
+        }
+    
     }
     ```
-- OrderApiController V2: 엔티티 > DTO 변환
-  
+  - 반환 형태가 Dto를 거친 리스트를 다시한 번 ObjectFormat을 거쳐 json 객체 {} 형태로 반환.
+    ```java
+    @GetMapping("/api/v2-object/orders")
+    public ObjectFormat objectOrdersV2() {
+        List<Order> allOrders = orderRepository.findAllOrders(new SearchOption());
+        List<OrderDtoL1> resultDto = allOrders.stream()
+                .map(o -> new OrderDtoL1(o))
+                .collect(Collectors.toList());
+
+        return new ObjectFormat(resultDto);
+    }
+
+    // ObjectFormat
+    @Data
+    @AllArgsConstructor
+    public class ObjectFormat<T> {
+        private T data;
+    }
+    ```
 
 
 
