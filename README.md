@@ -432,22 +432,22 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   - 엔티티의 직접적인 노출을 막고 Dto를 활용하여 원하는 데이터를 뽑아내는데 주력하여, 성능적인 측면이 고려되어 있지 않아 조회 시 위와 같이 과도한 쿼리가 발생하는 것을 확인할 수 있다.
 
 - OrderApiControllerL2 V3: fetch join 통한 쿼리 최적화
-> DataBase에서의 distinct 옵션이 적용되려면, 모든 필드 값이 동일해야 한다. 필드가 5개라면 모든 필드의 값이 동일해야 distinct 옵션이 정상적으로 걸리는 것이다.
-> 그러나 JPA에서 println 또는 log 를 통해 Order id 값을 조회해보면, 중복 id값을 가지는 애들은 중복을 제거하여 하나만 출력해준다. 이것은 DB와는 관련 없이 JPA 자체적으로 제공해주는 기능이다.
-> 그래서, postman 통해 API 조회했을 때 중복 제거되며, 다만 데이터베이스 테이블에서는 위와 같은 이유로 중복이 제거되지 않고 기존 데이터가 뻥튀기 된 채로 유지된다.
-  ```java
-  public List<Order> findAllUsingProduct() {
-      List<Order> resultOrderList = em.createQuery(
-              "select distinct o from Order o" +
-                      " join fetch o.member m" +
-                      " join fetch o.delivery d" +
-                      " join fetch o.orderProducts op" +
-                      " join fetch op.product p", Order.class
-      ).getResultList();
-      return resultOrderList;
-  }
-  ```
-  - 위 코드블럭에 있는 'distinct' 명령어는, 데이터베이스에 distinct 키워드를 날려주고, root entity가 중복될 경우 id값 기준으로 중복을 걸러서 컬렉션에 담아주는 2가지 기능을 제공한다.
+  > DataBase에서의 distinct 옵션이 적용되려면, 모든 필드 값이 동일해야 한다. 필드가 5개라면 모든 필드의 값이 동일해야 distinct 옵션이 정상적으로 걸리는 것이다.
+  > 그러나 JPA에서 println 또는 log 를 통해 Order id 값을 조회해보면, 중복 id값을 가지는 애들은 중복을 제거하여 하나만 출력해준다. 이것은 DB와는 관련 없이 JPA 자체적으로 제공해주는 기능이다.
+  > 그래서, postman 통해 API 조회했을 때 중복 제거되며, 다만 데이터베이스 테이블에서는 위와 같은 이유로 중복이 제거되지 않고 기존 데이터가 뻥튀기 된 채로 유지된다.
+    ```java
+    public List<Order> findAllUsingProduct() {
+        List<Order> resultOrderList = em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderProducts op" +
+                        " join fetch op.product p", Order.class
+        ).getResultList();
+        return resultOrderList;
+    }
+    ```
+    - 위 코드블럭에 있는 'distinct' 명령어는, 데이터베이스에 distinct 키워드를 날려주고, root entity가 중복될 경우 id값 기준으로 중복을 걸러서 컬렉션에 담아주는 2가지 기능을 제공한다.
 
 
     
