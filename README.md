@@ -429,7 +429,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   select p1_0.product_id,p1_0.dtype,p1_0.name,p1_0.price,p1_0.stock_quantity,p1_0.upload_file_upload_file_id,p1_0.author,p1_0.isbn,p1_0.actor,p1_0.director,p1_0.brand,p1_0.etc from product p1_0 where p1_0.product_id=3;
   select p1_0.product_id,p1_0.dtype,p1_0.name,p1_0.price,p1_0.stock_quantity,p1_0.upload_file_upload_file_id,p1_0.author,p1_0.isbn,p1_0.actor,p1_0.director,p1_0.brand,p1_0.etc from product p1_0 where p1_0.product_id=4;
   ```
-
+  - 엔티티의 직접적인 노출을 막고 Dto를 활용하여 원하는 데이터를 뽑아내는데 주력하여, 성능적인 측면이 고려되어 있지 않아 조회 시 위와 같이 과도한 쿼리가 발생하는 것을 확인할 수 있다.
 
 
 
