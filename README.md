@@ -382,7 +382,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     - Order > Dto 변환 과정에서, OrderProduct 까지 별도의 Dto를 구성하여 null값 노출을 막고 OrderProduct 엔티티 전체가 노출되는 것을 방지한다.
     - Dto로 변환하고자 하는 엔티티 내부에서 또 다른 엔티티를 연관관계로 가지는 필드가 있다면, 그 엔티티까지도 Dto를 활용하여 이중 변환 해줘야 문제가 없다.
       ```json
-      # API 수행 결과
+      // API 수행 결과
       {
         "orderId": 1,
         "name": "m1",
@@ -406,14 +406,29 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
             }
         ]
       }
-      ...
       ```
-  ### V2 정리
+  ### V2 동작 로직
     1. Repository에서 모든 주문을 조회한다.
     2. 주문 엔티티 원본을 주문 Dto로 변환한 뒤 리스트로 반환한다. 변환 시 생성자로 주문 엔티티를 파라미터로 넘기고, Dto에서는 넘겨받은 엔티티 데이터를 활용해서 값을 초기화한다.
     3. 그런데 Order 내부에 OrderProduct라고 하는 엔티티가 연관관계로 존재한다. OrderProduct 원본을 Dto로 변환하고 마찬가지로 리스트로 반환한다. 초기화 과정은 Order Dto와 동일.
     4. Order, OrderProduct 모두 직접적인 엔티티 조회 없이 원하는 값들만 지정하여 API로 호출이 가능하게 되었다.
 
+  ### V2 SQL query 및 성능
+  ```sql
+  select o1_0.order_id,o1_0.delivery_id,o1_0.member_id,o1_0.order_date,o1_0.order_status from orders o1_0 join member m1_0 on m1_0.member_id=o1_0.member_id fetch first 100 rows only;
+  select m1_0.member_id,m1_0.city,m1_0.country,m1_0.zipcode,m1_0.name from member m1_0 where m1_0.member_id=1;
+  select d1_0.delivery_id,d1_0.city,d1_0.country,d1_0.zipcode,d1_0.delivery_status from delivery d1_0 where d1_0.delivery_id=1;
+  select o1_0.order_id,o1_0.delivery_id,o1_0.member_id,o1_0.order_date,o1_0.order_status from orders o1_0 where o1_0.delivery_id=1;
+  select op1_0.order_id,op1_0.order_product_id,op1_0.count,op1_0.order_price,op1_0.product_id from order_product op1_0 where op1_0.order_id=1;
+  select p1_0.product_id,p1_0.dtype,p1_0.name,p1_0.price,p1_0.stock_quantity,p1_0.upload_file_upload_file_id,p1_0.author,p1_0.isbn,p1_0.actor,p1_0.director,p1_0.brand,p1_0.etc from product p1_0 where p1_0.product_id=1;
+  select p1_0.product_id,p1_0.dtype,p1_0.name,p1_0.price,p1_0.stock_quantity,p1_0.upload_file_upload_file_id,p1_0.author,p1_0.isbn,p1_0.actor,p1_0.director,p1_0.brand,p1_0.etc from product p1_0 where p1_0.product_id=2;
+  select m1_0.member_id,m1_0.city,m1_0.country,m1_0.zipcode,m1_0.name from member m1_0 where m1_0.member_id=2;
+  select d1_0.delivery_id,d1_0.city,d1_0.country,d1_0.zipcode,d1_0.delivery_status from delivery d1_0 where d1_0.delivery_id=2;
+  select o1_0.order_id,o1_0.delivery_id,o1_0.member_id,o1_0.order_date,o1_0.order_status from orders o1_0 where o1_0.delivery_id=2;
+  select op1_0.order_id,op1_0.order_product_id,op1_0.count,op1_0.order_price,op1_0.product_id from order_product op1_0 where op1_0.order_id=2;
+  select p1_0.product_id,p1_0.dtype,p1_0.name,p1_0.price,p1_0.stock_quantity,p1_0.upload_file_upload_file_id,p1_0.author,p1_0.isbn,p1_0.actor,p1_0.director,p1_0.brand,p1_0.etc from product p1_0 where p1_0.product_id=3;
+  select p1_0.product_id,p1_0.dtype,p1_0.name,p1_0.price,p1_0.stock_quantity,p1_0.upload_file_upload_file_id,p1_0.author,p1_0.isbn,p1_0.actor,p1_0.director,p1_0.brand,p1_0.etc from product p1_0 where p1_0.product_id=4;
+  ```
 
 
 
