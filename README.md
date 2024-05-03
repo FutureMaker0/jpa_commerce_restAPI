@@ -319,6 +319,21 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
 > ToOne 관계 시 가지고 오던 엔티티에 더해서, OrderProduct와 Product 엔티티 데이터까지 함께 가져온다.
 - OrderApiControllerL2 V1: 엔티티 직접 노출
 - OrderApiControllerL2 V2: property 에러가 날 경우, 대부분은 @Getter, @Setter, @Data 등의 필수 어노테이션이 누락된 경우이다.
+  ```java
+  {
+      "orderId": 1,
+      "name": "m1",
+      "orderDate": "2024-05-03T14:25:12.248311",
+      "orderStatus": "ORDER",
+      "address": {
+          "country": "한국",
+          "city": "부산",
+          "zipcode": "12345"
+      },
+      "orderProductList": null
+  }
+  ```
+  - 기존 데이터들은 정상적으로 잘 나오는데, 엔티티인 OrderProduct는 기댓값이 아닌 null이 출력되는 것을 확인할 수 있다.
   
 
 
