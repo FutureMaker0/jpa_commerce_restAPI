@@ -69,6 +69,15 @@ public class OrderApiControllerL2 {
         return new CustomFormat(resultDtoList);
     }
 
+    @GetMapping("/api/v3-collection/orders")
+    public List<OrderDtoL2> orderListV3() {
+        List<Order> allOrders = orderRepository.findAllUsingProduct();
+        List<OrderDtoL2> resultDtoList = allOrders.stream()
+                .map(order -> new OrderDtoL2(order))
+                .collect(Collectors.toList());
+
+        return resultDtoList;
+    }
 
 
 }

@@ -64,15 +64,16 @@ public class OrderRepository {
         return resultOrders;
     }
 
-//    public List<OrderJpaDirectDto> findOrderDtoList() {
-//        List<OrderJpaDirectDto> resultDtoList = em.createQuery(
-//                "select new jpa.commerce.api.order.dto.OrderJpaDirectDto(o.id, m.name, o.orderDate, o.orderStatus, d.address)" +
-//                        " from Order o" +
-//                        " join o.member m" +
-//                        " join o.delivery d", OrderJpaDirectDto.class
-//        ).getResultList();
-//
-//        return resultDtoList;
-//    }
+    public List<Order> findAllUsingProduct() {
+        List<Order> resultOrderList = em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderProducts op" +
+                        " join fetch op.product p", Order.class
+        ).getResultList();
+        return resultOrderList;
+    }
+
 
 }
