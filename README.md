@@ -334,7 +334,34 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   }
   ```
   - 기존 데이터들은 정상적으로 잘 나오는데, 엔티티인 OrderProduct는 기댓값이 아닌 null이 출력되는 것을 확인할 수 있다.
-  
+  ```java
+  public OrderDtoL2(Order order) {
+      orderId = order.getId();
+      name = order.getMember().getName();
+      orderDate = order.getOrderDate();
+      orderStatus = order.getOrderStatus();
+      address = order.getDelivery().getAddress();
+      
+      order.getOrderProducts().stream().forEach(orderProduct -> orderProduct.getProduct().getName());
+      orderProductList = order.getOrderProducts();
+  }
+  ```
+  - OrderProduct를 Dto 생성자에서 초기화해주어 Hibernate5JakartaModule로 인해 값이 null로 출력되는 것을 해결할 수 있다.
+  - Dto를 활용했으나 필드 중 List<OrderProduct> orderProductList; 즉 랩핑된 형태의 엔티티가 존재하며, API 개발 시 주문상품에 대한 데이터 전체가 노출이 되어 버리는 점에서 개선이 필요하다.
+    - 단순히 Dto의 형태로 엔티티를 감싸서 사용하는 것만으로는 근본적 해결책이라 할 수 없다.
+    - 본 상황에서는, OrderProduct 까지도 Dto로 변환하여 사용해야 한다.
+  - 정리
+    1. Repository에서 모든 주문을 조회한다.
+    2. 주문 엔티티 원본을 주문 Dto로 변환한 뒤 리스트로 반환한다. 변환 시 생성자로 주문 엔티티를 파라미터로 넘기고, Dto에서는 넘겨받은 엔티티 데이터를 활용해서 값을 초기화한다.
+    3. 그런데 Order 내부에 OrderProduct라고 하는 엔티티가 연관관계로 존재한다. OrderProduct 원본을 Dto로 변환하고 마찬가지로 리스트로 반환한다. 초기화 과정은 Order Dto와 동일.
+    4. Order, OrderProduct 모두 직접적인 엔티티 조회 없이 원하는 값들만 지정하여 API로 호출이 가능하게 되었다.
+
+
+
+
+
+
+    
 
 
 
