@@ -111,7 +111,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
 ## 주문 + 회원 + 배송정보 조회 API 개발 (__ToOne 연관관계)
 > 본 API 개발을 통해, 지연 로딩으로 인해 발생할 수 있는 문제를 확인하고, 성능을 잡아나갈 수 있는 방식을 설명한다.
 > '일대일' 또는 '다대일' 연관관계를 갖는 형태로 join으로 인한 성능 저하가 비교적 덜 발생하는 저난이도의 API에서의 성능 최적화를 어떻게 할 수 있을 것인가. (__ToOne)
-- OrderApiController V1: 엔티티 직접 노출
+- OrderApiControllerL1 V1: 엔티티 직접 노출
   - 일단 json 순환 참조를 막기 위해 양방향이 걸리는 데는 모두 다 한 쪽에 가서 @JsonIgnore를 걸어주어 한 쪽을 끊어줘야 한다. ex) Member에 있는 order, OrderProducts에 있는 order, Delivery에 있는 order
   - 무한 참조를 해결했더니 또 다른 에러가 발생했다. (Type definition error: [simple type, class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor]) 이하생략
     - 지연 로딩(FetchType.LAZY)로 설정하면서 발생하는 오류로, 지연 로딩을 하면서 연관관계에 있는 엔티티들은 실제 엔티티 객체가 아닌 프록시 객체로 가지고 있는데, 그 상태에서 데이터를 엮어서(serialize) 가져올 수 없어서 발생한다.
@@ -134,7 +134,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         order.getDelivery().getAddress(); // LAZY loading 강제 초기화
       }
       ```
-- OrderApiController V2: 엔티티 > DTO 변환
+- OrderApiControllerL1 V2: 엔티티 > DTO 변환
   > 엔티티를 가져오되, 중간 DTO를 거쳐 데이터를 한 차례 가공하여 엔티티를 직접 노출하지 않고 DTO를 최종 리턴 값으로 반환하는 형태.
   - 반환 형태가 Dto를 거친 리스트 형태로 반환.
     ```java
@@ -186,7 +186,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         private T data;
     }
     ```
-- OrderApiController V3: 엔티티 > DTO 변환, fetch join 통한 쿼리 최적화 및 성능 향상
+- OrderApiControllerL1 V3: 엔티티 > DTO 변환, fetch join 통한 쿼리 최적화 및 성능 향상
   ```java
   @GetMapping("api/v3-object/orders")
   public ObjectFormat objectOrdersV3() {
@@ -231,7 +231,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       join member m1_0 on m1_0.member_id=o1_0.member_id
       join delivery d1_0 on d1_0.delivery_id=o1_0.delivery_id;
     ```
-- OrderApiController V4: JPA에서 DTO로 바로 조회, 좀 더 높은 수준의 성능 최적화가 가능하다.
+- OrderApiControllerL1 V4: JPA에서 DTO로 바로 조회, 좀 더 높은 수준의 성능 최적화가 가능하다.
   > DTO는 Entity를 참조해도 괜찮다. 그러나 반대로 Entity가 DTO를 참조해선 안된다.
   - JPA는 엔티티 또는 value object만 반환이 가능하다. DTO를 반환 형식으로 사용할 수는 없기에 조작을 좀 해줘야 한다.
     ```java
@@ -316,7 +316,9 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   4. 3단계 까지의 과정으로 최적화가 안된다면, native SQL 이나 JDBC template을 사용하여(EntityManager를 사용하는 것이 아닌) SQL을 직접 다루어 조회한다.
 
 ## 주문 + 회원 + 배송정보 조회 API 개발 (__ToMany 연관관계, 컬렉션 조회)
-
+> ToOne 관계 시 가지고 오던 엔티티에 더해서, OrderProduct와 Product 엔티티 데이터까지 함께 가져온다.
+- OrderApiControllerL2 V1: 엔티티 직접 노출
+  
 
 
 
