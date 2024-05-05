@@ -5,6 +5,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
 # 기술 스택
   - Java(java 8)
   - Spring Data Jpa
+  - Postman
 
 ## 프로젝트 트리 구성
 - jpa
