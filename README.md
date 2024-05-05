@@ -448,7 +448,15 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     }
     ```
     - 위 코드블럭에 있는 'distinct' 명령어는, 데이터베이스에 distinct 키워드를 날려주고, root entity가 중복될 경우 id값 기준으로 중복을 걸러서 컬렉션에 담아주는 2가지 기능을 제공한다.
-
+    - 컬렉션 조회(__ToMany)에서의 fetch join을 통한 쿼리 최적화는, 명확한 장단점을 가지고 있다.
+      - 장점: fetch join을 통해 N번 수행되던 SQL 쿼리가 1번만 수행됨, 일대다 데이터로의 뻥튀기가 되어 데이터 row가 증가하고 중복이 생기지만 distinct 명령어를 통해 충분히 해결이 가능하다. 조회를 원하는 엔티티가 fetch join
+        으로 인해 중복 조회는 큰 문제가 아니라는 것이다.
+      - 단점: 페이징(Paging)이 안된다. 일대다를 fetch join 하는 순간 페이징 쿼리가 안나간다.(setFirstResult(), setMaxResult())
+        - 일대다 fetch join에서 set__Result()와 같은 페이징 메서드를 사용할 경우, 하이버네이트가 WARN 경고와 함께 Memory 내부에서 페이징 처리한 다음 결과를 반환한다. 대규모 서비스에서는 out of memory로 큰일이 날 것이다.
+          ```text
+          2024-05-05T11:36:56.503+09:00  WARN 2298 --- [nio-8080-exec-1] org.hibernate.orm.query                  : HHH90003004: firstResult/maxResults specified with collection fetch; applying in memory
+          ```
+        - 일대다 fetch join은 1개 엔티티로만 적용하할 수 있다. 그 이상이 될 경우 데이터 정합성이 깨질 수 있다.
 
     
 
