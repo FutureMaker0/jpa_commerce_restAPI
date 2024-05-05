@@ -491,7 +491,12 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     > 페이징의 목적은 다(N)이 아니라, 일(1)을 기준으로 페이징 하는 것이다.
     > V3에서 확인했듯 이런 경우, 하이버네이트가 경고 로그와 함께 메모리로 모든 데이터를 퍼올려 페이징을 시도한다. 이는 매우 위험한 것이다.
     - 컬렉션 엔티티 조회 + 페이징 까지 적용 할 수 있는 방법은 무엇일까?
-      - 
+      1. __ToOne: fetch join 한다. 몇 번이고 fetch join 해도 크게 어려움이 없다.
+      2. __ToMany(컬렉션): fetch join 하지 않고 지연 로딩으로 조회한다.(fetch = FetchType.LAZY)
+      3. 지연 로딩 하면서도 성능 최적화를 위해 'hibernate_default_batch_fetch_size', '@BatchSize' 옵션을 적용한다.
+         - hibernate_default_batch_fetch_size: 전체 프로젝트에 적용되는 글로벌 설정
+         - @BatchSize: 개별 메서드에 적용되는 최적화 어노테이션
+         -> 이 최적화 옵션을 프록시 객체나 컬렉션을 한꺼번에 설정한 size만큼 'IN' 쿼리로 조회한다.
 
 
 
