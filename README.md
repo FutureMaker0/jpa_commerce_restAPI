@@ -453,6 +453,20 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         으로 인해 중복 조회는 큰 문제가 아니라는 것이다.
       - 단점: 페이징(Paging)이 안된다. 일대다를 fetch join 하는 순간 페이징 쿼리가 안나간다.(setFirstResult(), setMaxResult())
         - 일대다 fetch join에서 set__Result()와 같은 페이징 메서드를 사용할 경우, 하이버네이트가 WARN 경고와 함께 Memory 내부에서 페이징 처리한 다음 결과를 반환한다. 대규모 서비스에서는 out of memory로 큰일이 날 것이다.
+          ```java
+          public List<Order> findAllUsingProduct() {
+              List<Order> resultOrderList = em.createQuery(
+                      "select distinct o from Order o" +
+                              " join fetch o.member m" +
+                              " join fetch o.delivery d" +
+                              " join fetch o.orderProducts op" +
+                              " join fetch op.product p", Order.class)
+                      .setFirstResult(1)
+                      .setMaxResults(10)
+                      .getResultList();
+              return resultOrderList;
+          }
+          ```
           ```text
           2024-05-05T11:36:56.503+09:00  WARN 2298 --- [nio-8080-exec-1] org.hibernate.orm.query                  : HHH90003004: firstResult/maxResults specified with collection fetch; applying in memory
           ```
