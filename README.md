@@ -468,6 +468,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           }
           ```
           ```text
+          // tomcat 서버 실행 결과 확인 가능 WARN log
           2024-05-05T11:36:56.503+09:00  WARN 2298 --- [nio-8080-exec-1] org.hibernate.orm.query                  : HHH90003004: firstResult/maxResults specified with collection fetch; applying in memory
           ```
         - 일대다 fetch join은 1개 엔티티로만 적용하할 수 있다. 그 이상이 될 경우 데이터 정합성이 깨질 수 있다.
