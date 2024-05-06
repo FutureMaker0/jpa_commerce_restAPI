@@ -497,8 +497,9 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
          - hibernate_default_batch_fetch_size: 전체 프로젝트에 적용되는 글로벌 설정
          - @BatchSize: 개별 메서드에 적용되는 최적화 어노테이션
          -> 이 최적화 옵션을 프록시 객체나 컬렉션을 한꺼번에 설정한 size만큼 'IN' 쿼리로 조회한다.
-
-
+    - 단 1개 쿼리를 통한 최소한의 조회 숫자를 보장하지는 않더라도, 적절히 최적화된 숫자의 sql 쿼리 횟수(1+N+M -> 1+1+1)와 페이징 적용 두 마리 토끼 모두를 잡을 수 있는 방식.
+      > 1 + N + M: 전체 fetch join 쿼리(1) + fetch join 테이블 내 컬렉션1(N) + fetch join 테이블 내 컬렉션2(M)
+        -> fetch join 쿼리(1) + batch_fetch_size 적용 통한 컬렉션 IN 쿼리1(1) + batch_fetch_size 적용 통한 컬렉션 IN 쿼리2(1)
 
 
 
