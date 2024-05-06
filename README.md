@@ -614,6 +614,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         where
             p1_0.product_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ```
+  - OrderApiControllerL2 V4: JPA에서 DTO를 바로 조회
+    - OrderJpaDirectDtoL2를 생성자 초기화하는 과정에서 컬렉션을 파라미터로 넣어줄 수 없는 문제. (List<OrderProductDtoL2> OrderProductList;)
 
 
 
