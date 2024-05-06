@@ -64,14 +64,25 @@ public class OrderRepository {
         return resultOrders;
     }
 
+    public List<Order> findAllUsingMemberDelivery(int offset, int limit) {
+        List<Order> resultOrders = em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+        return resultOrders;
+    }
+
     public List<Order> findAllUsingProduct() {
         List<Order> resultOrderList = em.createQuery(
                 "select distinct o from Order o" +
                         " join fetch o.member m" +
                         " join fetch o.delivery d" +
                         " join fetch o.orderProducts op" +
-                        " join fetch op.product p", Order.class
-        ).getResultList();
+                        " join fetch op.product p", Order.class)
+                .getResultList();
         return resultOrderList;
     }
 
