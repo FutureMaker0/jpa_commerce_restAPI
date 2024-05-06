@@ -493,13 +493,127 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     - 컬렉션 엔티티 조회 + 페이징 까지 적용 할 수 있는 방법은 무엇일까?
       1. __ToOne: fetch join 한다. 몇 번이고 fetch join 해도 크게 어려움이 없다.
       2. __ToMany(컬렉션): fetch join 하지 않고 지연 로딩으로 조회한다.(fetch = FetchType.LAZY)
-      3. 지연 로딩 하면서도 성능 최적화를 위해 'hibernate_default_batch_fetch_size', '@BatchSize' 옵션을 적용한다.
+      3. 지연 로딩 하면서도 성능 최적화를 위해 'hibernate.default_batch_fetch_size', '@BatchSize' 옵션을 적용한다.
          - hibernate_default_batch_fetch_size: 전체 프로젝트에 적용되는 글로벌 설정
          - @BatchSize: 개별 메서드에 적용되는 최적화 어노테이션
          -> 이 최적화 옵션을 프록시 객체나 컬렉션을 한꺼번에 설정한 size만큼 'IN' 쿼리로 조회한다.
     - 단 1개 쿼리를 통한 최소한의 조회 숫자를 보장하지는 않더라도, 적절히 최적화된 숫자의 sql 쿼리 횟수(1+N+M -> 1+1+1)와 페이징 적용 두 마리 토끼 모두를 잡을 수 있는 방식.
       > 1 + N + M: 전체 fetch join 쿼리(1) + fetch join 테이블 내 컬렉션1(N) + fetch join 테이블 내 컬렉션2(M)
         -> fetch join 쿼리(1) + batch_fetch_size 적용 통한 컬렉션 IN 쿼리1(1) + batch_fetch_size 적용 통한 컬렉션 IN 쿼리2(1)
+      - SQL query: http://localhost:8080/api/v3.1-collection-object/orders
+      - API 조회 결과
+        ```json
+        {
+            "data": [
+                {
+                    "orderId": 1,
+                    "name": "m1",
+                    "orderDate": "2024-05-06T18:14:10.222436",
+                    "orderStatus": "ORDER",
+                    "address": {
+                        "country": "한국",
+                        "city": "부산",
+                        "zipcode": "12345"
+                    },
+                    "orderProductList": [
+                        {
+                            "name": "cn1",
+                            "orderPrice": 10000,
+                            "count": 10
+                        },
+                        {
+                            "name": "cn2",
+                            "orderPrice": 20000,
+                            "count": 20
+                        }
+                    ]
+                },
+                {
+                    "orderId": 2,
+                    "name": "m2",
+                    "orderDate": "2024-05-06T18:14:10.260597",
+                    "orderStatus": "ORDER",
+                    "address": {
+                        "country": "미국",
+                        "city": "LA",
+                        "zipcode": "98765"
+                    },
+                    "orderProductList": [
+                        {
+                            "name": "cn3",
+                            "orderPrice": 30000,
+                            "count": 30
+                        },
+                        {
+                            "name": "cn4",
+                            "orderPrice": 40000,
+                            "count": 40
+                        }
+                    ]
+                }
+            ]
+        }
+        ```
+        ```sql
+        // __ToOne 연관관계 fetch join
+        select
+            o1_0.order_id,
+            d1_0.delivery_id,
+            d1_0.city,
+            d1_0.country,
+            d1_0.zipcode,
+            d1_0.delivery_status,
+            m1_0.member_id,
+            m1_0.city,
+            m1_0.country,
+            m1_0.zipcode,
+            m1_0.name,
+            o1_0.order_date,
+            o1_0.order_status 
+        from
+            orders o1_0 
+        join
+            member m1_0 
+                on m1_0.member_id=o1_0.member_id 
+        join
+            delivery d1_0 
+                on d1_0.delivery_id=o1_0.delivery_id 
+        offset
+            ? rows 
+        fetch
+            first ? rows only
+
+        // default_batch_fetch_size = 10으로 설정했을 때, __ToMany 컬렉션 OrderProduct를 IN 쿼리로 가져오는 모습
+        select
+            op1_0.order_id,
+            op1_0.order_product_id,
+            op1_0.count,
+            op1_0.order_price,
+            op1_0.product_id 
+        from
+            order_product op1_0 
+        where
+            op1_0.order_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+        // default_batch_fetch_size = 10으로 설정했을 때, __ToMany 컬렉션 Product를 IN 쿼리로 가져오는 모습
+        select
+            p1_0.product_id,
+            p1_0.dtype,
+            p1_0.name,
+            p1_0.price,
+            p1_0.stock_quantity,
+            p1_0.upload_file_upload_file_id,
+            p1_0.author,
+            p1_0.isbn,
+            p1_0.actor,
+            p1_0.director,
+            p1_0.brand,
+            p1_0.etc 
+        from
+            product p1_0 
+        where
+            p1_0.product_id in (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ```
 
 
 
