@@ -616,6 +616,66 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
         ```
   - OrderApiControllerL2 V4: JPA에서 DTO를 바로 조회
     - OrderJpaDirectDtoL2를 생성자 초기화하는 과정에서 컬렉션을 파라미터로 넣어줄 수 없는 문제. (List<<OrderProductDtoL2>> OrderProductList;)
+      - OrderJpaDirectDtoL2: JPQL 쿼리를 사용하여, JPA에서 다이렉트로 데이터 조회를 하기 위한 DTO
+        ```java
+        @Data
+        public class OrderJpaDirectDtoL2 {
+        
+            private Long orderId;
+            private String name;
+            private LocalDateTime orderDate;
+            private OrderStatus orderStatus;
+            private Address address;
+            private List<OrderProductDtoL2> orderProductList;
+        
+            public OrderJpaDirectDtoL2(Long orderId,
+                                       String name,
+                                       LocalDateTime orderDate,
+                                       OrderStatus orderStatus,
+                                       Address address) {
+                this.orderId = orderId;
+                this.name = name;
+                this.orderDate = orderDate;
+                this.orderStatus = orderStatus;
+                this.address = address;
+            }
+        
+        }
+        ```   
+      - OrderProductDtoL2: OrderJpaDriectDtoL2에 포함된 컬렉션 List<OrderProduct> OrderProducts를 처리하기 위한 DTO
+        ```java
+        @Data
+        public class OrderProductDtoL2 {
+        
+            @JsonIgnore
+            private Long orderId;
+            private String name;
+            private int orderPrice;
+            private int count;
+        
+            public OrderProductDtoL2(Long orderId, String name, int orderPrice, int count) {
+                this.orderId = orderId;
+                this.name = name;
+                this.orderPrice = orderPrice;
+                this.count = count;
+            }
+        
+        }
+        ```
+      - QueryRepository: JPQL을 통해 DTO를 직접 조회하는 메서드만 별도로 패키징한 리포지토리. 기본 Repository와 분리하여 코드 파악 및 유지보수를 용이하게 한다.
+        - 특이점: OrderJpaDirectDtoL2에서 생성자 초기화하지 못한 컬렉션 OrderProduct List를 이 리포지토리 내에서 루프 돌리면서 컬렉션 채우는 로직이 수행된다.
+        ```java
+        public List<OrderJpaDirectDtoL2> findOrderJpaDirectDtoL2List() {
+            List<OrderJpaDirectDtoL2> resultDtoList = findOrderList();
+    
+            // 컬렉션 부분은 위에서 처리가 안되므로, 다시 직접 가져와서 루프 돌면서 초기화(컬렉션 채우는 것) 작업을 추가적으로 해주고 있다.
+            resultDtoList.forEach(o -> {
+                List<OrderProductDtoL2> orderProductList = findOrderProductList(o.getOrderId());
+                o.setOrderProductList(orderProductList);
+            });
+            return resultDtoList;
+        }
+        ```
 
 
 
