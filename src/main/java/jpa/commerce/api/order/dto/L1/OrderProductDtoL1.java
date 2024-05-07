@@ -1,16 +1,16 @@
-package jpa.commerce.api.order.dto;
+package jpa.commerce.api.order.dto.L1;
 
 import jpa.commerce.domain.OrderProduct;
 import lombok.Data;
 
 @Data
-public class OrderProductDto {
+public class OrderProductDtoL1 {
 
     private String name;
     private int orderPrice;
     private int count;
 
-    public OrderProductDto(OrderProduct orderProduct) {
+    public OrderProductDtoL1(OrderProduct orderProduct) {
         name = orderProduct.getProduct().getName();
         orderPrice = orderProduct.getOrderPrice();
         count = orderProduct.getCount();

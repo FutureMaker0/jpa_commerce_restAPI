@@ -1,9 +1,9 @@
 package jpa.commerce.api.order.controller;
 
 import jpa.commerce.api.order.dto.ObjectFormat;
-import jpa.commerce.api.order.dto.OrderDtoL1;
-import jpa.commerce.api.order.dto.OrderJpaDirectDto;
-import jpa.commerce.api.order.repository.QueryRepository;
+import jpa.commerce.api.order.dto.L1.OrderDtoL1;
+import jpa.commerce.api.order.dto.L1.OrderJpaDirectDtoL1;
+import jpa.commerce.api.order.repository.QueryRepositoryL1;
 import jpa.commerce.domain.Order;
 import jpa.commerce.domain.SearchOption;
 import jpa.commerce.repository.OrderRepository;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class OrderApiControllerL1 {
 
     private final OrderRepository orderRepository;
-    private final QueryRepository queryRepository;
+    private final QueryRepositoryL1 queryRepositoryL1;
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1() {
@@ -76,13 +76,13 @@ public class OrderApiControllerL1 {
     }
 
     @GetMapping("/api/v4/orders")
-    public List<OrderJpaDirectDto> ordersV4() {
-        return queryRepository.findOrderDtoList();
+    public List<OrderJpaDirectDtoL1> ordersV4() {
+        return queryRepositoryL1.findOrderJpaDirectDtoL1List();
     }
 
     @GetMapping("/api/v4-object/orders")
     public ObjectFormat objectOrdersV4() {
-        List<OrderJpaDirectDto> resultDtoList = queryRepository.findOrderDtoList();
+        List<OrderJpaDirectDtoL1> resultDtoList = queryRepositoryL1.findOrderJpaDirectDtoL1List();
         return new ObjectFormat(resultDtoList);
     }
 

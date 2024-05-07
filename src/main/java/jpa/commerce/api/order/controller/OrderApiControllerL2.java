@@ -1,14 +1,15 @@
 package jpa.commerce.api.order.controller;
 
 import jpa.commerce.api.member.dto.CustomFormat;
-import jpa.commerce.api.order.dto.OrderDtoL2;
+import jpa.commerce.api.order.dto.L2.OrderDtoL2;
+import jpa.commerce.api.order.dto.L2.OrderJpaDirectDtoL2;
+import jpa.commerce.api.order.repository.QueryRepositoryL2;
 import jpa.commerce.domain.Order;
 import jpa.commerce.domain.OrderProduct;
 import jpa.commerce.domain.SearchOption;
 import jpa.commerce.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class OrderApiControllerL2 {
 
     private final OrderRepository orderRepository;
+    private final QueryRepositoryL2 queryRepositoryL2;
 
     @GetMapping("/api/v1-collection/orders")
     public List<Order> orderListV1() {
@@ -115,7 +117,16 @@ public class OrderApiControllerL2 {
         return new CustomFormat(resultDtoList);
     }
 
+    @GetMapping("/api/v4-collection/orders")
+    public List<OrderJpaDirectDtoL2> orderListV4() {
+        List<OrderJpaDirectDtoL2> allOrders =  queryRepositoryL2.findOrderJpaDirectDtoL2List();
+        return allOrders;
+    }
 
-
+    @GetMapping("/api/v4-collection-object/orders")
+    public CustomFormat orderOrderListV4() {
+        List<OrderJpaDirectDtoL2> allOrders =  queryRepositoryL2.findOrderJpaDirectDtoL2List();
+        return new CustomFormat(allOrders);
+    }
 
 }
