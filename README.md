@@ -736,7 +736,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       ```
     - 결과 SQL Query
       ```sql
-      // Order 조회
+      // Order 조회 (root 1회)
       select
           o1_0.order_id,
           m1_0.name,
@@ -754,6 +754,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           delivery d1_0 
               on d1_0.delivery_id=o1_0.delivery_id
 
+      // 컬렉션 N회 실행
       // Order 1에 속한 OrderProduct 조회
       select
           op1_0.order_id,
