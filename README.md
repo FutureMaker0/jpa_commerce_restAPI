@@ -676,7 +676,112 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
             return resultDtoList;
         }
         ```
+    - 동작 원리 및 정리
+      - query: 컬렉션 제외 루트 DTO 1회, 컬렉션 N회 실행
+      - ToOne(다대일, 일대일) 연관관계를 먼저 조회하고, ToMany(컬렉션)은 각각 별도로 처리한다.(CustomRepository)
+        - ToOne 연관관계는 fetch join을 아무리 해도 수평적으로 데이터 column이 붙을 뿐 row가 증가하지 않는다.
+        - ToMany 연관관계는 fetch join 하는 순간 N을 기준으로 데이터가 확장되어 어지럽게 된다. 그러므로 상기 findOrderProductList 등의 별도 메서드를 구현하여 컬렉션은 별도 조회한다.
+    - 결과 JSON
+      ```json
+      {
+          "data": [
+              {
+                  "orderId": 1,
+                  "name": "m1",
+                  "orderDate": "2024-05-07T15:49:49.768189",
+                  "orderStatus": "ORDER",
+                  "address": {
+                      "country": "한국",
+                      "city": "부산",
+                      "zipcode": "12345"
+                  },
+                  "orderProductList": [
+                      {
+                          "name": "cn1",
+                          "orderPrice": 10000,
+                          "count": 10
+                      },
+                      {
+                          "name": "cn2",
+                          "orderPrice": 20000,
+                          "count": 20
+                      }
+                  ]
+              },
+              {
+                  "orderId": 2,
+                  "name": "m2",
+                  "orderDate": "2024-05-07T15:49:49.793267",
+                  "orderStatus": "ORDER",
+                  "address": {
+                      "country": "미국",
+                      "city": "LA",
+                      "zipcode": "98765"
+                  },
+                  "orderProductList": [
+                      {
+                          "name": "cn3",
+                          "orderPrice": 30000,
+                          "count": 30
+                      },
+                      {
+                          "name": "cn4",
+                          "orderPrice": 40000,
+                          "count": 40
+                      }
+                  ]
+              }
+          ]
+      }
+      ```
+    - 결과 SQL Query
+      ```sql
+      // Order 조회
+      select
+          o1_0.order_id,
+          m1_0.name,
+          o1_0.order_date,
+          o1_0.order_status,
+          d1_0.city,
+          d1_0.country,
+          d1_0.zipcode 
+      from
+          orders o1_0 
+      join
+          member m1_0 
+              on m1_0.member_id=o1_0.member_id 
+      join
+          delivery d1_0 
+              on d1_0.delivery_id=o1_0.delivery_id
 
+      // Order 1에 속한 OrderProduct 조회
+      select
+          op1_0.order_id,
+          p1_0.name,
+          op1_0.order_price,
+          op1_0.count 
+      from
+          order_product op1_0 
+      join
+          product p1_0 
+              on p1_0.product_id=op1_0.product_id 
+      where
+          op1_0.order_id=1
+
+      // Order 2에 속한 OrderProduct 조회
+      select
+          op1_0.order_id,
+          p1_0.name,
+          op1_0.order_price,
+          op1_0.count 
+      from
+          order_product op1_0 
+      join
+          product p1_0 
+              on p1_0.product_id=op1_0.product_id 
+      where
+          op1_0.order_id=2
+      ```
 
 
 
