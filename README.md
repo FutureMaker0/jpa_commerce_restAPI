@@ -783,6 +783,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       where
           op1_0.order_id=2
       ```
+  - OrderApiControllerL2 V5: JPA에서 DTO를 바로 조회 - 컬렉션 조회 최적화
+    - Order의 OrderProduct들을 가지고 올 때, 일일이 루프를 돌리는 것이 아니라 IN 쿼리로 관련 항목을 한번에 긁어온 다음 Map을 사용하여 메모리에 올려놓고 필요할 떄 원하는 값만 꺼내서 set 해준다.
 
 
 
