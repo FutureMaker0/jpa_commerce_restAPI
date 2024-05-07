@@ -785,7 +785,10 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       ```
   - OrderApiControllerL2 V5: JPA에서 DTO를 바로 조회 - 컬렉션 조회 최적화
     - Order의 OrderProduct들을 가지고 올 때, 일일이 루프를 돌리는 것이 아니라 IN 쿼리로 관련 항목을 한번에 긁어온 다음 Map을 사용하여 메모리에 올려놓고 필요할 떄 원하는 값만 꺼내서 set 해준다.
-
+      - Query: root 1회, 컬렉션: 1회
+      - ToOne 연관관계를 먼저 조회하고, 이를 통해 얻은 식별자 orderId로 ToMany 관계인 Order 내 OrderPruduct를 한꺼번에 조회한다.
+      - Map<Long, List<exDtos>>를 적용하여 매칭 성능이 향상되도록 하였다.(O(1))
+        --> 조회 쿼리 갯수 축소, 성능 최적화가 상당 부분 달성되고 있지만, 직접 작성해야하는 코드가 ~V4 대비 증가하고 있음을 알 수 있다. 이를 통해 알 수 있듯 trade-off가 존재한다.
 
 
 
