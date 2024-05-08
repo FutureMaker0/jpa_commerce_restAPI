@@ -119,14 +119,28 @@ public class OrderApiControllerL2 {
 
     @GetMapping("/api/v4-collection/orders")
     public List<OrderJpaDirectDtoL2> orderListV4() {
-        List<OrderJpaDirectDtoL2> allOrders =  queryRepositoryL2.findOrderJpaDirectDtoL2List();
+        List<OrderJpaDirectDtoL2> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List();
         return allOrders;
     }
 
     @GetMapping("/api/v4-collection-object/orders")
     public CustomFormat orderOrderListV4() {
-        List<OrderJpaDirectDtoL2> allOrders =  queryRepositoryL2.findOrderJpaDirectDtoL2List();
+        List<OrderJpaDirectDtoL2> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List();
         return new CustomFormat(allOrders);
     }
+
+    @GetMapping("/api/v5-collection/orders")
+    public List<OrderJpaDirectDtoL2> orderListV5() {
+        List<OrderJpaDirectDtoL2> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List_optimized();
+        return allOrders;
+    }
+
+    @GetMapping("/api/v5-collection-object/orders")
+    public CustomFormat objectOrderListV5() {
+        List<OrderJpaDirectDtoL2> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List_optimized();
+        return new CustomFormat(allOrders);
+    }
+
+
 
 }

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,6 +26,46 @@ public class QueryRepositoryL2 {
         });
         return resultDtoList;
     }
+
+    //=============================================================
+    public List<OrderJpaDirectDtoL2> findOrderJpaDirectDtoL2List_optimized() {
+        // root 1번 조회
+        List<OrderJpaDirectDtoL2> resultOrders = findOrderList();
+
+        // Order 데이터 만큼 메모리에 올린다.
+        List<Long> orderIds = getOrderIds(resultOrders);
+        Map<Long, List<OrderProductDtoL2>> orderProductMap = getOrderProductMap(orderIds);
+
+        // 루프 돌며 컬렉션 데이터를, 메모리에 올려놓은 데이터를 활용하여 채운다.
+        resultOrders.forEach(o -> o.setOrderProductList(orderProductMap.get(o.getOrderId())));
+
+        // 결과값 반환
+        return resultOrders;
+    }
+
+    private Map<Long, List<OrderProductDtoL2>> getOrderProductMap(List<Long> orderIds) {
+        List<OrderProductDtoL2> orderProductList = em.createQuery(
+                        "select new jpa.commerce.api.order.dto.L2.OrderProductDtoL2(op.order.id, p.name, op.orderPrice, op.count)" +
+                                " from OrderProduct op" +
+                                " join op.product p" +
+                                " where op.order.id in :orderIds", OrderProductDtoL2.class)
+                .setParameter("orderIds", orderIds)
+                .getResultList();
+
+        Map<Long, List<OrderProductDtoL2>> orderProductMap = orderProductList.stream()
+                .collect(Collectors.groupingBy(OrderProductDtoL2 -> OrderProductDtoL2.getOrderId()));
+
+        return orderProductMap;
+    }
+
+    private static List<Long> getOrderIds(List<OrderJpaDirectDtoL2> resultOrders) {
+        List<Long> orderIds = resultOrders.stream()
+                .map(o -> o.getOrderId())
+                .collect(Collectors.toList());
+
+        return orderIds;
+    }
+    //=============================================================
 
     private List<OrderProductDtoL2> findOrderProductList(Long orderId) {
         List<OrderProductDtoL2> resultDtoList = em.createQuery(
