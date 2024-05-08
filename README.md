@@ -785,11 +785,86 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       ```
   - OrderApiControllerL2 V5: JPA에서 DTO를 바로 조회 - 컬렉션 조회 최적화
     - Order의 OrderProduct들을 가지고 올 때, 일일이 루프를 돌리는 것이 아니라 IN 쿼리로 관련 항목을 한번에 긁어온 다음 Map을 사용하여 메모리에 올려놓고 필요할 떄 원하는 값만 꺼내서 set 해준다.
-      - Query: root 1회, 컬렉션: 1회
-      - ToOne 연관관계를 먼저 조회하고, 이를 통해 얻은 식별자 orderId로 ToMany 관계인 Order 내 OrderPruduct를 한꺼번에 조회한다.
-      - Map<Long, List<exDtos>>를 적용하여 매칭 성능이 향상되도록 하였다.(O(1))
-        --> 조회 쿼리 갯수 축소, 성능 최적화가 상당 부분 달성되고 있지만, 직접 작성해야하는 코드가 ~V4 대비 증가하고 있음을 알 수 있다. 이를 통해 알 수 있듯 trade-off가 존재한다.
-
+      ```java
+      public List<OrderJpaDirectDtoL2> findOrderJpaDirectDtoL2List_optimized() {
+          // root 1번 조회
+          List<OrderJpaDirectDtoL2> resultOrders = findOrderList();
+  
+          // Order 데이터 만큼 메모리에 올린다.
+          List<Long> orderIds = getOrderIds(resultOrders);
+          Map<Long, List<OrderProductDtoL2>> orderProductMap = getOrderProductMap(orderIds);
+  
+          // 루프 돌며 컬렉션 데이터를, 메모리에 올려놓은 데이터를 활용하여 채운다.
+          resultOrders.forEach(o -> o.setOrderProductList(orderProductMap.get(o.getOrderId())));
+  
+          // 결과값 반환
+          return resultOrders;
+      }
+      ```
+      - V4 DTO 조회에서 조회 성능 최적화를 위한 코드가 일부 추가되었다.
+    - ToOne 연관관계를 먼저 조회하고, 이를 통해 얻은 식별자 orderId로 ToMany 관계인 Order 내 OrderPruduct를 한꺼번에 조회한다.
+      ```java
+      private static List<Long> getOrderIds(List<OrderJpaDirectDtoL2> resultOrders) {
+          List<Long> orderIds = resultOrders.stream()
+                  .map(o -> o.getOrderId())
+                  .collect(Collectors.toList());
+  
+          return orderIds;
+      }
+      ```
+    - Map<Long, List<exDtos>>를 적용하여 매칭 성능이 향상되도록 하였다.(O(1))
+      --> 조회 쿼리 갯수 축소, 성능 최적화가 상당 부분 달성되고 있지만, 직접 작성해야하는 코드가 ~V4 대비 증가하고 있음을 알 수 있다. 이를 통해 알 수 있듯 trade-off가 존재한다.
+      ```java
+      private Map<Long, List<OrderProductDtoL2>> getOrderProductMap(List<Long> orderIds) {
+          List<OrderProductDtoL2> orderProductList = em.createQuery(
+                          "select new jpa.commerce.api.order.dto.L2.OrderProductDtoL2(op.order.id, p.name, op.orderPrice, op.count)" +
+                                  " from OrderProduct op" +
+                                  " join op.product p" +
+                                  " where op.order.id in :orderIds", OrderProductDtoL2.class)
+                  .setParameter("orderIds", orderIds)
+                  .getResultList();
+  
+          Map<Long, List<OrderProductDtoL2>> orderProductMap = orderProductList.stream()
+                  .collect(Collectors.groupingBy(OrderProductDtoL2 -> OrderProductDtoL2.getOrderId()));
+  
+          return orderProductMap;
+      }
+      ```
+      - Map으로 변환하기 전 JPQL 쿼리를 보면, '=' 등호에서 'in' 명령어로 바뀐 것을 확인할 수 있다. 이는 하위 엔티티를 IN 쿼리를 통해 한 번에 긁어옴으로써 루프를 돌릴때마다 별도 쿼리가 나가는 상황을 최적화한다.
+    - Query: root 1회, 컬렉션: 1회
+      ```sql
+      // root query
+      select
+          o1_0.order_id,
+          m1_0.name,
+          o1_0.order_date,
+          o1_0.order_status,
+          d1_0.city,
+          d1_0.country,
+          d1_0.zipcode 
+      from
+          orders o1_0 
+      join
+          member m1_0 
+              on m1_0.member_id=o1_0.member_id 
+      join
+          delivery d1_0 
+              on d1_0.delivery_id=o1_0.delivery_id
+      
+      // collection query
+      select
+          op1_0.order_id,
+          p1_0.name,
+          op1_0.order_price,
+          op1_0.count 
+      from
+          order_product op1_0 
+      join
+          product p1_0 
+              on p1_0.product_id=op1_0.product_id 
+      where
+          op1_0.order_id in (1, 2)
+      ```
 
 
 
