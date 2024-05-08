@@ -813,7 +813,6 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       }
       ```
     - Map<Long, List<exDtos>>를 적용하여 매칭 성능이 향상되도록 하였다.(O(1))
-      --> 조회 쿼리 갯수 축소, 성능 최적화가 상당 부분 달성되고 있지만, 직접 작성해야하는 코드가 ~V4 대비 증가하고 있음을 알 수 있다. 이를 통해 알 수 있듯 trade-off가 존재한다.
       ```java
       private Map<Long, List<OrderProductDtoL2>> getOrderProductMap(List<Long> orderIds) {
           List<OrderProductDtoL2> orderProductList = em.createQuery(
@@ -831,6 +830,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       }
       ```
       - Map으로 변환하기 전 JPQL 쿼리를 보면, '=' 등호에서 'in' 명령어로 바뀐 것을 확인할 수 있다. 이는 하위 엔티티를 IN 쿼리를 통해 한 번에 긁어옴으로써 루프를 돌릴때마다 별도 쿼리가 나가는 상황을 최적화한다.
+      - 조회 쿼리 갯수 축소, 성능 최적화가 상당 부분 달성되고 있지만, 직접 작성해야하는 코드가 ~V4 대비 증가한다. 이러한 trade-off가 존재하므로, 개발환경 및 진행상황에 따라 적절한 방식을 선택하는 것이 중요하다.
     - Query: root 1회, 컬렉션: 1회
       ```sql
       // root query
