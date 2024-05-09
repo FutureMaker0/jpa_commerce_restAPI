@@ -8,13 +8,13 @@ public class OrderProductDtoL2 {
 
     @JsonIgnore
     private Long orderId;
-    private String name;
+    private String productName;
     private int orderPrice;
     private int count;
 
-    public OrderProductDtoL2(Long orderId, String name, int orderPrice, int count) {
+    public OrderProductDtoL2(Long orderId, String ProductName, int orderPrice, int count) {
         this.orderId = orderId;
-        this.name = name;
+        this.productName = productName;
         this.orderPrice = orderPrice;
         this.count = count;
     }

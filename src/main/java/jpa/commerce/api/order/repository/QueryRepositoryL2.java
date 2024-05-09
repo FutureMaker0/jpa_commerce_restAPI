@@ -1,6 +1,7 @@
 package jpa.commerce.api.order.repository;
 
 import jakarta.persistence.EntityManager;
+import jpa.commerce.api.order.dto.L2.OrderFlatDto;
 import jpa.commerce.api.order.dto.L2.OrderJpaDirectDtoL2;
 import jpa.commerce.api.order.dto.L2.OrderProductDtoL2;
 import lombok.RequiredArgsConstructor;
@@ -93,5 +94,17 @@ public class QueryRepositoryL2 {
         return resultDtoList;
     }
 
+    public List<OrderFlatDto> findOrderJpaDirectDtoL2List_flatData() {
+        List<OrderFlatDto> flatDtoList = em.createQuery(
+                        "select new jpa.commerce.api.order.dto.L2.OrderFlatDto(o.id, m.name, o.orderDate, o.orderStatus, d.address, p.name, op.orderPrice, op.count)" +
+                                " from Order o" +
+                                " join o.member m" +
+                                " join o.delivery d" +
+                                " join o.orderProducts op" +
+                                " join op.product p", OrderFlatDto.class)
+                .getResultList();
+
+        return flatDtoList;
+    }
 
 }

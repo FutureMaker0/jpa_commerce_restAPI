@@ -2,6 +2,7 @@ package jpa.commerce.api.order.controller;
 
 import jpa.commerce.api.member.dto.CustomFormat;
 import jpa.commerce.api.order.dto.L2.OrderDtoL2;
+import jpa.commerce.api.order.dto.L2.OrderFlatDto;
 import jpa.commerce.api.order.dto.L2.OrderJpaDirectDtoL2;
 import jpa.commerce.api.order.repository.QueryRepositoryL2;
 import jpa.commerce.domain.Order;
@@ -141,6 +142,17 @@ public class OrderApiControllerL2 {
         return new CustomFormat(allOrders);
     }
 
+    @GetMapping("/api/v6-collection/orders")
+    public List<OrderFlatDto> orderListV6() {
+        List<OrderFlatDto> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List_flatData();
+        return allOrders;
+    }
+
+    @GetMapping("/api/v6-collection-object/orders")
+    public CustomFormat objectOrderListV6() {
+        List<OrderFlatDto> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List_flatData();
+        return new CustomFormat(allOrders);
+    }
 
 
 }
