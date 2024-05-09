@@ -27,13 +27,19 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           - OrderApiControllerL1
           - OrderApiControllerL2
         - dto
+          - L1
+            - OrderDtoL1
+            - OrderJpaDirectDtoL1
+            - OrderProductDtoL1
+          - L2
+            - OrderDtoL2
+            - OrderJpaDirectDtoL2
+            - OrderProductDtoL2
+            - OrderFlatDto
           - ObjectFormat
-          - OrderDtoL1
-          - OrderDtoL2
-          - OrderJpaDirectDto
-          - OrderProductDto
         - repository
-          - queryRepository
+          - queryRepositoryL1
+          - queryRepositoryL2
     - repository
       - orderRepository
         - regist()
