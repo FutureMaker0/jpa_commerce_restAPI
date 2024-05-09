@@ -47,7 +47,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
 ## API 어노테이션
   - @RestController: @Controller + @ResponseBody
   - @RequestBody: json으로 넘어온 body를 객체로 바로 매핑해서 값을 넣어준다. (json data -> Entity 객체)
-  - @Data: 아래 어노테이션들의 조합, 코드 가독성을 높이고 반복 작업을 줄이며 코드 간결성을 향상시킬 수 있다.
+  - @Data: 아래 어노테이션들의 조합, 코드 가독성을 높이고 반복 작업을 줄이며 코드 간결성을 향상시킬 수 있다. DTO에서 주로 활용.
     1. @Getter: 클래스 모든 필드에 대한 getter 메서드 자동 생성
     2. @Setter: 클래스 모든 필드에 대한 setter 메서드 자동 생성
     3. @ToString: 클래스의 toString() 메서드 자동 생성
