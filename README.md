@@ -871,8 +871,79 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           op1_0.order_id in (1, 2)
       ```
   - OrderApiControllerL2 V5: JPA에서 DTO를 바로 조회 - flat data optimization
-    - 
+    - /api/order/dto/L2/OrderFlatDto
+      ```java
+      @Data
+      public class OrderFlatDto {
+          // Order - OrderProduct - Product join 하여 한방 쿼리로 가져온다.
+      
+          private Long orderId;
+          private String name;
+          private LocalDateTime orderDate;
+          private OrderStatus orderStatus;
+          private Address address;
+      
+          private String productName;
+          private int orderPrice;
+          private int count;
+      
+          public OrderFlatDto(Long orderId,
+                              String name,
+                              LocalDateTime orderDate,
+                              OrderStatus orderStatus,
+                              Address address,
+                              String productName,
+                              int orderPrice,
+                              int count) {
+              this.orderId = orderId;
+              this.name = name;
+              this.orderDate = orderDate;
+              this.orderStatus = orderStatus;
+              this.address = address;
+              this.productName = productName;
+              this.orderPrice = orderPrice;
+              this.count = count;
+          }
+      }
+      ```
+    - /api/order/repository/queryRepositoryL2
+      ```java
+      public List<OrderFlatDto> findOrderJpaDirectDtoL2List_flatData() {
+          List<OrderFlatDto> flatDtoList = em.createQuery(
+                          "select new jpa.commerce.api.order.dto.L2.OrderFlatDto(o.id, m.name, o.orderDate, o.orderStatus, d.address, p.name, op.orderPrice, op.count)" +
+                                  " from Order o" +
+                                  " join o.member m" +
+                                  " join o.delivery d" +
+                                  " join o.orderProducts op" +
+                                  " join op.product p", OrderFlatDto.class)
+                  .getResultList();
+  
+          return flatDtoList;
+      }
+      ```
+    - /api/order/controller/OrderApiControllerL2
+      ```java
+      @GetMapping("/api/v6-collection/orders")
+      public List<OrderFlatDto> orderListV6() {
+          List<OrderFlatDto> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List_flatData();
+          return allOrders;
+      }
+  
+      @GetMapping("/api/v6-collection-object/orders")
+      public CustomFormat objectOrderListV6() {
+          List<OrderFlatDto> allOrders = queryRepositoryL2.findOrderJpaDirectDtoL2List_flatData();
+          return new CustomFormat(allOrders);
+      }
+      ```
+    - 동작원리 및 정리
+    - 결과 JSON
+      ```json
 
+      ```
+    - 결과 Query
+      ```sql
+
+      ```
 
 
 
