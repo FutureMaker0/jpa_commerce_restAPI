@@ -16,7 +16,7 @@
         open-in-view: true/false
     ```
 
-## 장단점
+## 장단점 및 활용방안
   - OSIV ON:
     - 장점: DB connection을 끝까지 유지하면서 지연로딩이 가능하다.
     - 단점: DB connection 고갈로 서비스 장애가 발생할 수 있다.
