@@ -99,12 +99,12 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   </tr>
   <tr>
     <td rowspan="2">member</td>
-    <td>GET</td>
+    <td rowspan="2">GET</td>
     <td>/api/v1/members</td>
     <td>회원 조회</td>
   </tr>
   <tr>
-    <td>POST</td>
+    <td rowspan="2">POST</td>
     <td>/api/v1/members</td>
     <td>회원 등록</td>
   </tr>
