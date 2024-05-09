@@ -870,6 +870,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       where
           op1_0.order_id in (1, 2)
       ```
+  - OrderApiControllerL2 V5: JPA에서 DTO를 바로 조회 - flat data optimization
+    - 
 
 
 
