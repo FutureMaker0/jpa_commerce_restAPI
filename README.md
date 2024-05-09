@@ -1007,8 +1007,34 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       - root query 한방으로 데이터를 가져왔으나, join으로 인해 데이터가 N을 기준으로 확장되고 데이터 중복이 발생한 것을 확인할 수 있다.(OrderProduct 4개 cn1, cn2, cn3, cn4 출력을 위해 Order 1, 2가 각각 2번씩 출력)
     - 결과 Query
       ```sql
-      
+      select
+          o1_0.order_id,
+          m1_0.name,
+          o1_0.order_date,
+          o1_0.order_status,
+          d1_0.city,
+          d1_0.country,
+          d1_0.zipcode,
+          p1_0.name,
+          op1_0.order_price,
+          op1_0.count 
+      from
+          orders o1_0 
+      join
+          member m1_0 
+              on m1_0.member_id=o1_0.member_id 
+      join
+          delivery d1_0 
+              on d1_0.delivery_id=o1_0.delivery_id 
+      join
+          order_product op1_0 
+              on o1_0.order_id=op1_0.order_id 
+      join
+          product p1_0 
+              on p1_0.product_id=op1_0.product_id
       ```
+    - DataBase 조회 결과
+      <img width="500" alt="스크린샷 2024-05-09 오후 1 18 23" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/0e2c7bee-0b50-4b2b-8549-2b35a5d672b3">
 
 
 
