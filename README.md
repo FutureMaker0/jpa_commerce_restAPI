@@ -943,8 +943,68 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       - join하여 N(OrderProduct)을 기준으로 데이터가 확장되었기 때문에 원하는 형태(Order 기준)로 Paging이 불가능하다.
     - 결과 JSON
       ```json
-
+      {
+          "data": [
+              {
+                  "orderId": 1,
+                  "name": "m1",
+                  "orderDate": "2024-05-09T12:43:20.735997",
+                  "orderStatus": "ORDER",
+                  "address": {
+                      "country": "한국",
+                      "city": "부산",
+                      "zipcode": "12345"
+                  },
+                  "productName": "cn1",
+                  "orderPrice": 10000,
+                  "count": 10
+              },
+              {
+                  "orderId": 1,
+                  "name": "m1",
+                  "orderDate": "2024-05-09T12:43:20.735997",
+                  "orderStatus": "ORDER",
+                  "address": {
+                      "country": "한국",
+                      "city": "부산",
+                      "zipcode": "12345"
+                  },
+                  "productName": "cn2",
+                  "orderPrice": 20000,
+                  "count": 20
+              },
+              {
+                  "orderId": 2,
+                  "name": "m2",
+                  "orderDate": "2024-05-09T12:43:20.78113",
+                  "orderStatus": "ORDER",
+                  "address": {
+                      "country": "미국",
+                      "city": "LA",
+                      "zipcode": "98765"
+                  },
+                  "productName": "cn3",
+                  "orderPrice": 30000,
+                  "count": 30
+              },
+              {
+                  "orderId": 2,
+                  "name": "m2",
+                  "orderDate": "2024-05-09T12:43:20.78113",
+                  "orderStatus": "ORDER",
+                  "address": {
+                      "country": "미국",
+                      "city": "LA",
+                      "zipcode": "98765"
+                  },
+                  "productName": "cn4",
+                  "orderPrice": 40000,
+                  "count": 40
+              }
+          ]
+      }
       ```
+      - root query 한방으로 데이터를 가져왔으나, join으로 인해 데이터가 N을 기준으로 확장되고 데이터 중복이 발생한 것을 확인할 수 있다.(OrderProduct 4개 cn1, cn2, cn3, cn4 출력을 위해 Order 1, 2가 각각 2번씩 출력)
     - 결과 Query
       ```sql
       
