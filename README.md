@@ -61,37 +61,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     4. @EqualsAndHashCode: 클래스의 equals() 및 hashCode() 메서드 자동 생성
    
 ## API 명세
-  |엔티티|method|API|기능|
-  |:---:|:---:|:---:|:---:|
-  |member|GET|/api/v1/members|회원 조회|
-  |member|GET|/api/v2/members|회원 조회|
-  |member|POST|/api/v1/members|회원 등록|
-  |member|POST|/api/v2/members|회원 등록|
-  |member|PUT|/api/v2/members/{memberId}|회원 수정|
-  |order|GET|/api/v1/orders|주문 조회|
-  |order|GET|/api/v2/orders|주문 조회|
-  |order|GET|/api/v2-object/orders|주문 조회|
-  |order|GET|/api/v3/orders|주문 조회|
-  |order|GET|/api/v3-object/orders|주문 조회|
-  |order|GET|/api/v4/orders|주문 조회|
-  |order|GET|/api/v4-object/orders|주문 조회|
-  |order|GET|/api/v1-collection/orders||
-  |order|GET|/api/v1-collection-object/orders||
-  |order|GET|/api/v2-collection/orders||
-  |order|GET|/api/v2-collection-object/orders||
-  |order|GET|/api/v3-collection/orders||
-  |order|GET|/api/v3-collection-object/orders||
-  |order|GET|/api/v3.1-collection/orders||
-  |order|GET|/api/v3.1-collection-object/orders||
-  |order|GET|/api/v4-collection/orders||
-  |order|GET|/api/v4-collection-object/orders||
-  |order|GET|/api/v5-collection/orders||
-  |order|GET|/api/v5-collection-object/orders||
-  |order|GET|/api/v6-collection/orders||
-  |order|GET|/api/v6-collection-object/orders||
-  
-  <img width="500" alt="스크린샷 2024-05-09 오후 3 34 41" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/4245a37e-e254-466b-a94a-79b4cd167954"></br>
-  <img width="500" alt="스크린샷 2024-05-09 오후 3 34 08" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/61655785-5948-418c-985d-a3107949955c">
+  <img width="500" alt="" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/4245a37e-e254-466b-a94a-79b4cd167954"></br>
+  <img width="500" alt="" style="margin-top: 0px" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/61655785-5948-418c-985d-a3107949955c">
 
 ## 회원등록 API(method="POST")
   - registMemberV1: Member 엔티티를 그대로 파라미터에서 쓰고 있으므로 그로부터 유발되는 문제들이 발생할 수 있다.
