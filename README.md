@@ -1033,8 +1033,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
           product p1_0 
               on p1_0.product_id=op1_0.product_id
       ```
-    - DataBase 조회 결과
-      <img width="500" alt="스크린샷 2024-05-09 오후 1 18 23" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/0e2c7bee-0b50-4b2b-8549-2b35a5d672b3">
+    - DataBase 조회 결과</br>
+      <img width="600" alt="스크린샷 2024-05-09 오후 1 18 23" src="https://github.com/FutureMaker0/jpa_toypjt_commerce/assets/120623320/0e2c7bee-0b50-4b2b-8549-2b35a5d672b3">
 
 
 
