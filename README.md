@@ -936,13 +936,18 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
       }
       ```
     - 동작원리 및 정리
+      - Query: root 1번
+      - Order, OrderProduct, Product 엔티티를 join하여 join 테이블에서 query 한방으로 모든 데이터를 한꺼번에 가져온다.
+      - 쿼리가 한번이라는 점에서 장점이 있지만, join으로 인해 N을 기준으로 데이터가 뻥튀기 되는 과정에서 중복 데이터가 생길 수 밖에 없다. 이러한 이유로 오히려 조회 속도가 느려질 수도 있는 방식이다.
+      - 조회한 flatData 형식을 원하는 반환 형식(ex.OrderJpaDriectDtoL2)으로 변환하기 위해 애플리케이션(컨트롤러 layer)에서 추가 작업 등이 필요할 수 있다.
+      - join하여 N(OrderProduct)을 기준으로 데이터가 확장되었기 때문에 원하는 형태(Order 기준)로 Paging이 불가능하다.
     - 결과 JSON
       ```json
 
       ```
     - 결과 Query
       ```sql
-
+      
       ```
 
 
