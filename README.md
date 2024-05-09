@@ -90,6 +90,26 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   |order|GET|/api/v6-collection/orders||
   |order|GET|/api/v6-collection-object/orders||
 
+  <table>
+  <tr>
+    <th>엔티티</th>
+    <th>method</th>
+    <th>API</th>
+    <th>기능</th>
+  </tr>
+  <tr>
+    <td rowspan="2">member</td>
+    <td>GET</td>
+    <td>/api/v1/members</td>
+    <td>회원 조회</td>
+  </tr>
+  <tr>
+    <td>POST</td>
+    <td>/api/v1/members</td>
+    <td>회원 등록</td>
+  </tr>
+</table>
+
 ## 회원등록 API(method="POST")
   - registMemberV1: Member 엔티티를 그대로 파라미터에서 쓰고 있으므로 그로부터 유발되는 문제들이 발생할 수 있다.
     - 엔티티 필드 수정이 일어나면 API 스펙이 바뀌어버리는 중대한 문제가 발생할 수 있다. 엔티티는 굉장히 여러 곳에서 사용하기 때문에 바뀔 가능성이 높은데, 엔티티가 변경될 때마다 API를 그에 맞춰 다시 만들어야하는 상황이 발생한다.
