@@ -80,8 +80,8 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
     - V1으로 개발하면서 엔티티를 임의 수정했다가 발생할 사이드 이펙트의 범위를 측정하기조차 힘들게 될 것이다.
     - API는 요청 및 응답을 엔티티 원본을 사용하는게 아니라 DTO 객체를 사용해서 하는 것을 권장한다.
 
-## 회원수정 API(method="PUT") - 멱등하다
-  - 회원이름 정보 수정 API
+## 회원수정 API(method="PUT")
+  - 회원이름 정보 수정 API('멱등하다'로 표현한다.)
   - UpdateMemberRequest, UpdateMemberResponse DTO 객체를 별도로 만든다.
   - 수정 기능은 굉장히 제한적이기 때문에 Regist와는 별개의 DTO를 새로 만든다.
   - 기존에 만들어놓은 updateMember() 함수가 주소값까지 모두 파라미터로 받게 되어 있다. (id, name, country, city, zipcode)
