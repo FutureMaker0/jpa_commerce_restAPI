@@ -6,7 +6,7 @@ jpa_toypjt_commerce 프로젝트와 기본적인 MVC 코드를 공유하며, res
   - Java(java 8, intelliJ IDEA)
   - Spring Data Jpa
   - Postman
-  - H2 database
+  - H2 database(+mySQL)
 
 ## 프로젝트 트리 구성
 - jpa
