@@ -27,3 +27,12 @@
     - 회원 등록 후, 데이터베이스 추가 내역 확인 가능
     - 회원 등록 API 통해 json 데이터 및 요청 보낸 후, 데이터베이스 추가 내역 확인 가능
 11. control+c 명령어로 mySQL 연결 탈출
+
+### mySQL 실행 및 조회 이미지
+<img width="173" alt="mysql1" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/a54768b3-46ac-4329-985a-ffcaf1822a5b">
+<img width="469" alt="mysql2" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/cc3dcf9a-24af-4038-aa17-efe6ea3ab0b3">
+<img width="195" alt="mysql3" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/1ff02a4a-584f-4f91-8c0c-14419ea6308c">
+<img width="541" alt="mysql4" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/059d0094-441f-495f-8943-18edb2614bab">
+<img width="938" alt="mysql5" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/d765748c-9ded-488f-aac2-e190d186afce">
+<img width="582" alt="mysql6" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/4f190d38-f454-4a95-bed2-7e6bfa5063c6">
+
