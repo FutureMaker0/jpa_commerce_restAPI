@@ -1,6 +1,6 @@
 # R-DBMS: mySQL 연동
 
-## 연동 및 데이터 활용 순서
+## 1. 연동 및 데이터 활용 순서
 1. 프로젝트 진행 전이라면 MySQL Driver를 Dependency 등록 해주면 되고, 진행 중 mySQL로 바꾸고자 하면 build.gradle에 아래 두 줄을 적용한다.
   - implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
   - implementation 'com.mysql:mysql-connector-j' (IDE, dbms 버전에 따라 사용되는 구문이 조금씩 다르니 확인 후 추가 필요)
@@ -28,7 +28,7 @@
     - 회원 등록 API 통해 json 데이터 및 요청 보낸 후, 데이터베이스 추가 내역 확인 가능
 11. control+c 명령어로 mySQL 연결 탈출
 
-### mySQL 실행 및 조회 이미지
+### 2. mySQL 실행 및 조회 이미지
 <img width="173" alt="mysql1" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/a54768b3-46ac-4329-985a-ffcaf1822a5b"></br>
 <img width="469" alt="mysql2" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/cc3dcf9a-24af-4038-aa17-efe6ea3ab0b3"></br>
 <img width="195" alt="mysql3" src="https://github.com/FutureMaker0/practical_developer_knowledge/assets/120623320/1ff02a4a-584f-4f91-8c0c-14419ea6308c"></br>
